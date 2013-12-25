@@ -14,7 +14,8 @@ public:
 
 	double get_rate() const;
 	void set_rate(double rate);
-private:	
+private:
+    void sync(long now);
 	std::chrono::microseconds claim_next(double permits);
 private:
 	double interval_;	

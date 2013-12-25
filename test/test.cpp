@@ -1,8 +1,21 @@
 #include <iostream>
-#include "rate_limiter_interface.hpp"
+#include <chrono>
+#include "rate_limiter.hpp"
 
 int main() {
-    using namespace std;
+    using namespace std::chrono;
+    RateLimiterInterface* limiter = new RateLimiter();
     
-    cout << "Hello, world!" << endl;
+    limiter->set_rate(1.0);
+    
+	long start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    
+    std::cout << "Starting..." << std::endl;
+    for (int i = 0; i < 10; i++) {
+        limiter->aquire(2);
+        std::cout << "Aquired..." << std::endl;
+    }
+    
+    long end = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    std::cout << "Finished in " << end - start << " milliseconds" << std::endl;
 }
