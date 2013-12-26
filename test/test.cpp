@@ -12,7 +12,7 @@ int main() {
     
     std::cout << "Starting..." << std::endl;
     for (int i = 0; i < 10; i++) {
-        limiter->aquire(2);
+        limiter->try_aquire(1, 1000);
         std::cout << "Aquired..." << std::endl;
     }
     

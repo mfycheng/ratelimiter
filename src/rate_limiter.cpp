@@ -5,22 +5,38 @@
 
 #include "rate_limiter.hpp"
 
-void RateLimiter::aquire() {
-	aquire(1);
+double RateLimiter::aquire() {
+	return aquire(1);
 }
-void RateLimiter::aquire(int permits) {
+double RateLimiter::aquire(int permits) {
 	if (permits <= 0)
 		std::runtime_error("RateLimiter: Must request positive amount of permits");
 
 	auto wait_time = claim_next(permits);
 	std::this_thread::sleep_for(wait_time);
+    
+    return wait_time.count() / 1000.0;
 }
 
 bool RateLimiter::try_aquire(int permits) {
     return try_aquire(permits, 0);
 }
 bool RateLimiter::try_aquire(int permits, int timeout) {
-    return false;
+    using namespace std::chrono;
+    
+    long now = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
+    
+    // Check to see if the next free aquire time is within the
+    // specified timeout. If it's not, return false and DO NOT BLOCK,
+    // otherwise, calculate time needed to claim, and block
+    if (next_free_ > now + timeout * 1000)
+        return false;
+    else {
+        auto wait_time = claim_next(permits);
+        std::this_thread::sleep_for(wait_time);
+    }
+    
+    return true;
 }
 
 void RateLimiter::sync(long now) {
