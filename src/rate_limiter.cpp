@@ -5,10 +5,10 @@
 
 #include "rate_limiter.hpp"
 
-double RateLimiter::aquire() {
+long RateLimiter::aquire() {
 	return aquire(1);
 }
-double RateLimiter::aquire(int permits) {
+long RateLimiter::aquire(int permits) {
 	if (permits <= 0)
 		std::runtime_error("RateLimiter: Must request positive amount of permits");
 

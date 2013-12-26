@@ -5,8 +5,8 @@ class RateLimiterInterface {
 public:
 	virtual ~RateLimiterInterface() {}
 
-	virtual double aquire() = 0;
-	virtual double aquire(int permits) = 0;
+	virtual long aquire() = 0;
+	virtual long aquire(int permits) = 0;
 
 	virtual bool try_aquire(int timeout) = 0;
 	virtual bool try_aquire(int permits, int timeout) = 0;

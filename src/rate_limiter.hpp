@@ -6,8 +6,8 @@
 
 class RateLimiter : public RateLimiterInterface {
 public:
-	double aquire();
-	double aquire(int permits);
+	long aquire();
+	long aquire(int permits);
 
 	bool try_aquire(int timeouts);
 	bool try_aquire(int permits, int timeout);
