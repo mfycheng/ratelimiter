@@ -5,6 +5,8 @@
 
 #include "rate_limiter.hpp"
 
+RateLimiter::RateLimiter() : interval_(0), max_permits_(0), stored_permits_(0), next_free_(0) {
+}
 long RateLimiter::aquire() {
 	return aquire(1);
 }
@@ -24,7 +26,7 @@ bool RateLimiter::try_aquire(int permits) {
 bool RateLimiter::try_aquire(int permits, int timeout) {
     using namespace std::chrono;
     
-    long now = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
+    unsigned long long now = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
     
     // Check to see if the next free aquire time is within the
     // specified timeout. If it's not, return false and DO NOT BLOCK,
@@ -39,7 +41,7 @@ bool RateLimiter::try_aquire(int permits, int timeout) {
     return true;
 }
 
-void RateLimiter::sync(long now) {
+void RateLimiter::sync(unsigned long long now) {
     // If we're passed the next_free, then recalculate
     // stored permits, and update next_free_
     if (now > next_free_) {
@@ -52,7 +54,7 @@ std::chrono::microseconds RateLimiter::claim_next(double permits) {
 
 	std::lock_guard<std::mutex> lock(mut_);
 
-	long now = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
+	unsigned long long now = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
     
     // Make sure we're synced
     sync(now);

@@ -6,6 +6,7 @@
 
 class RateLimiter : public RateLimiterInterface {
 public:
+	RateLimiter();
 	long aquire();
 	long aquire(int permits);
 
@@ -15,14 +16,14 @@ public:
 	double get_rate() const;
 	void set_rate(double rate);
 private:
-    void sync(long now);
+    void sync(unsigned long long now);
 	std::chrono::microseconds claim_next(double permits);
 private:
 	double interval_;	
 	double max_permits_;
 	double stored_permits_;
 
-	long next_free_;
+	unsigned long long next_free_;
 	
 	std::mutex mut_;
 };
