@@ -39,9 +39,8 @@ Where wait_time is the amount of time that the thread was blocked for in millise
 For the timeout blocking:
 
 ```
-bool aquired = limiter->try_aquire(); // attempts to grab 1 permit. If it cannot aquire immediately, returns false, with no block
-bool aquired = limiter->try_aquire(2); // same as try_aquire(), but with 2 permits
-bool aquired = limiter->try_aquire(2, 3000); // attemps to grab 2 permits, and WILL ONLY BLOCK if it can aquire those permits WITHIN 3 seconds.
+bool aquired = limiter->try_aquire(3000); // Same as try_aquire(1, 3000)
+bool aquired = limiter->try_aquire(2, 3000);
 ```
 
-Essentially, if try_aquire can get it's permits within the specified time, then it will block, and then return true. Otherwise, it will return immediately and return false.
+On both cases, if try_aquire can aquire it's permits within the specified time (from now), it will block as long as necessary by the rate limiter, and then return true when it has aquired the permits. If it cannot aquire those permits within the specified time, then it will return IMMEDIATELY, with a value of false.
