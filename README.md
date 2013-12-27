@@ -49,6 +49,7 @@ On both cases, if try_aquire can aquire it's permits within the specified time (
 
 These apply to all rate limiters in this library.
 
- * Aquiring permits affect the next aquire, and not the current. That is, the next aquire will happen at the same time regardless of how many permits it requires. The amount of permits it aquired affects how long until the next aquire will be allowed.
  * The first aquire happens instantly
+ * Permits don't need to be returned
  * Changing the rate of a rate limiter will be applied on the NEXT aquire. For more information, see the test_rate() test.
+ * Aquiring permits affect the next aquire, and not the current. That is, the next aquire will happen at the same time regardless of how many permits it requires. The amount of permits it aquired affects how long until the next aquire will be allowed.
