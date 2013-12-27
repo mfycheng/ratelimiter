@@ -60,7 +60,7 @@ std::chrono::microseconds RateLimiter::claim_next(double permits) {
     sync(now);
     
     // Since we synced before hand, this will always be >= 0.
-	long wait = next_free_ - now;
+	unsigned long long wait = next_free_ - now;
 
     // Determine how many stored and freh permits to consume
 	double stored = std::min(permits, stored_permits_);

@@ -14,13 +14,13 @@ bool test_aquire() {
     
     RateLimiterInterface* limiter = new RateLimiter();
     limiter->set_rate(10);
-    long start = GET_TIME
+    long long start = GET_TIME
     
     for (int i = 0; i < 20; i++) {
         limiter->aquire();
     }
     
-    long end = GET_TIME
+    long long end = GET_TIME
     
     double error = ((end - start) - 2000) /  2000;
     
@@ -33,18 +33,18 @@ bool test_aquire_multiple_permits() {
     RateLimiterInterface* limiter = new RateLimiter();
     limiter->set_rate(0.5);
 
-    long start = GET_TIME
+    long long start = GET_TIME
     
     // This aquire should happen instantly, but cause the next aquire
     // to occur ~4 seconds later
     limiter->aquire(2);
     
-    long first = GET_TIME
+    long long first = GET_TIME
     
     limiter->aquire(1);
 
-    long end = GET_TIME
-    long error = ((end - start) - 4000) / 4000;
+    long long end = GET_TIME
+    long long error = ((end - start) - 4000) / 4000;
     
     return (first - end < 100) && std::abs(error) < TOLERANCE;
 }
@@ -54,7 +54,7 @@ bool test_try_aquire() {
     RateLimiterInterface* limiter = new RateLimiter();
     limiter->set_rate(0.5);
     
-    long start = GET_TIME
+    long long start = GET_TIME
     
     // This should pass, since the current request only
     // affects the next, and since this is the first, any size can go through
@@ -73,7 +73,7 @@ bool test_try_aquire() {
     // and this should fail.
     assert(limiter->try_aquire(1, 2000));
     
-    long end = GET_TIME
+    long long end = GET_TIME
     double error = ((end - start) - 2000) / 2000;
     
     return std::abs(error) < TOLERANCE;
@@ -87,12 +87,12 @@ bool test_rate() {
     limiter->set_rate(1);
     assert(limiter->get_rate() == 1);
     
-    long start = GET_TIME
+    long long start = GET_TIME
     
     limiter->aquire();
     limiter->aquire();
     
-    long end = GET_TIME
+    long long end = GET_TIME
     double first_error = ((end - start) - 1000) / 1000;
     
     limiter->set_rate(0.5);
@@ -112,7 +112,7 @@ bool test_rate() {
     limiter->aquire();
     end = GET_TIME
     
-    long second_error = ((end - start) - 2000) / 2000;
+    long long second_error = ((end - start) - 2000) / 2000;
     
     return std::abs(first_error) < TOLERANCE && std::abs(second_error) < TOLERANCE;
 }
