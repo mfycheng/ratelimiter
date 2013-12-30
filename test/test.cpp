@@ -1,7 +1,9 @@
 #include <cassert>
 #include <chrono>
-#include <iostream>
 #include <cmath>
+#include <iostream>
+#include <future>
+#include <thread>
 #include "rate_limiter.hpp"
 
 #define GET_TIME duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -118,9 +120,41 @@ bool test_rate() {
 }
 
 bool test_concurrent() {
-    return false;
+    // Pretty basic concurrent test to make sure it's threadsafe.
+    // It's pretty hard to test fully, but the general idea of this test
+    // is to have a relatively high rate, and put a LOT of concurrent requests through.
+    
+    // In order for this to be thread safe, the following conditions must be satisfied:
+    // 1) No Deadlocks
+    // 2) No Starvation
+    // 3) No Unexpected behaviour
+    // If this test runs to completion, it's a strong indicator that it's deadlock free,
+    // but not necessarily garuenteed (although the algorithm doesn't show any reason why
+    // a deadlock would occur. Worst case is an erroneous time calculation that leads to a
+    // REALLY long wait.
+    using namespace std::chrono;
+    
+    RateLimiterInterface* limiter = new RateLimiter();
+    limiter->set_rate(100.0);
+    
+    // We use futures, so we can make sure every task finishes.
+    // Note: We cannot simply do a bunch of std::async without storing
+    //       future, since it will trigger the future's destructor, causing it
+    //       to be synchronous.
+    std::future<bool> results[1000];
+    
+    long start = GET_TIME
+    for (int i = 0; i < 1000; i++)
+        results[i] = std::async(std::launch::async, [limiter]() { limiter->aquire(); return true; });
+    
+    for (int i = 0; i < 1000; i++)
+        assert(results[i].get());
+    long end = GET_TIME
+    
+    double error = ((end - start) - 10000.0) / 10000.0;
+    
+    return std::abs(error) < 10 * TOLERANCE;
 }
-
 
 int main() {
     using namespace std;
@@ -147,6 +181,12 @@ int main() {
     
     cout << "Running rate test...";
     if (test_rate())
+        cout << "Passed." << endl;
+    else
+        cout << "Failed." << endl;
+    
+    cout << "Running concurrent test...";
+    if (test_concurrent())
         cout << "Passed." << endl;
     else
         cout << "Failed." << endl;
