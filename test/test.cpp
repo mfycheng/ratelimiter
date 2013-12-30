@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <future>
+#include <string>
 #include <thread>
 #include "rate_limiter.hpp"
 
@@ -34,7 +35,7 @@ bool test_aquire_multiple_permits() {
     
     RateLimiterInterface* limiter = new RateLimiter();
     limiter->set_rate(0.5);
-
+    
     long long start = GET_TIME
     
     // This aquire should happen instantly, but cause the next aquire
@@ -44,7 +45,7 @@ bool test_aquire_multiple_permits() {
     long long first = GET_TIME
     
     limiter->aquire(1);
-
+    
     long long end = GET_TIME
     long long error = ((end - start) - 4000) / 4000;
     
@@ -156,38 +157,32 @@ bool test_concurrent() {
     return std::abs(error) < 10 * TOLERANCE;
 }
 
+struct Test {
+    bool (*test)();
+    std::string name;
+};
+
+Test tests[] = {
+    { test_aquire, "Aquire" },
+    { test_aquire_multiple_permits, "Aquire Multiple" },
+    { test_rate, "Rate" },
+    { test_try_aquire, "Try Aquire" },
+    { test_concurrent, "Concurrency" }
+};
+
 int main() {
     using namespace std;
     
-    // TODO: Make running tests more automated
-    
-    cout << "Running Aquire Test...";
-    if (test_aquire())
-        cout << "Passed." << endl;
-    else
-        cout << "Failed." << endl;
-    
-    cout << "Running Multiple Aquire Test...";
-    if (test_aquire_multiple_permits())
-        cout << "Passed." << endl;
-    else
-        cout << "Failed." << endl;
-    
-    cout << "Running try_aquire test...";
-    if (test_try_aquire())
-        cout << "Passed." << endl;
-    else
-        cout << "Failed." << endl;
-    
-    cout << "Running rate test...";
-    if (test_rate())
-        cout << "Passed." << endl;
-    else
-        cout << "Failed." << endl;
-    
-    cout << "Running concurrent test...";
-    if (test_concurrent())
-        cout << "Passed." << endl;
-    else
-        cout << "Failed." << endl;
+    int num = sizeof(tests) / sizeof(Test);
+    for (int i = 0; i < num; i++) {
+        cout << "Running Test: " << tests[i].name << "...";
+        cout.flush();
+        
+        if (tests[i].test())
+            cout << "Passed.";
+        else
+            cout << "Failed.";
+        
+        cout << endl;
+    }
 }
