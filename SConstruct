@@ -2,7 +2,6 @@ env = Environment(CCFLAGS=['-std=c++0x'])
 env.Append(CPPPATH=['src'])
 env.Append(LIBPATH=['src'])
 env.Append(LIBS='rate_limiter.o')
-env.VariantDir('build', 'src', duplicate=0)
 
 # Library
 src_files = Glob('src/*.cpp')
