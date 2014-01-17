@@ -1,11 +1,6 @@
 language: c++
 compiler:
     - clang
-    - gcc
-install:
-    - sudo add-apt-repository --yes ppa:h-rayflood/llvm
-    - sudo apt-get -qq update
-    - sudo apt-get -qq install libstdc++-4.8-dev clang-3.2
 branches:
     only:
         - master
