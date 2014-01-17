@@ -1,4 +1,4 @@
-# Description
+# Description [![Build Status](https://travis-ci.org/mfycheng/ratelimiter.png?branch=master)](https://travis-ci.org/mfycheng/ratelimiter)
 
 ratelimiter is a simple c++ implementation of a thread safe, basic rate limiter.
 
