@@ -1,0 +1,13 @@
+language: c++
+compiler:
+    - clang
+    - gcc
+branches:
+    only:
+        - master
+script: scons
+notifications:
+    recipients:
+        - orbzor@gmail.com
+    email:
+        on_failure: always

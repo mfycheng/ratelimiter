@@ -2,7 +2,7 @@
 #define _rate_limiter_h_
 
 #include <mutex>
-#include "rate_limiter_interface.hpp" 
+#include "rate_limiter_interface.hpp"
 
 class RateLimiter : public RateLimiterInterface {
 public:
@@ -19,7 +19,7 @@ private:
     void sync(unsigned long long now);
     std::chrono::microseconds claim_next(double permits);
 private:
-    double interval_;	
+    double interval_;
     double max_permits_;
     double stored_permits_;
 
