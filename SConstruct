@@ -1,4 +1,4 @@
-env = Environment(CCFLAGS=['-std=c++11', '-Wc++11-extensions'])
+env = Environment(CCFLAGS=['-std=c++0x', '-Wc++11-extensions'])
 env.Append(CPPPATH=['src'])
 env.Append(LIBPATH=['src'])
 env.Append(LIBS='rate_limiter.o')
