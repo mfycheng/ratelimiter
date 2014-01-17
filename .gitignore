@@ -12,6 +12,10 @@
 *.la
 *.a
 
+# Output files
+*.out
+*.exe
+
 # Ignore Scons db
 .sconsign.dblite
 
