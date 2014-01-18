@@ -1,12 +1,15 @@
+VariantDir('bin/main', 'src/', duplicate=False)
+VariantDir('bin/test', 'test/', duplicate=False)
+
+# Environment Setup
 env = Environment(CCFLAGS=['-std=c++0x'])
-env.Append(LIBS='rate_limiter.o')
-env.Append(CPPPATH=['src'])
-env.Append(LIBPATH=['src'])
+env.Append(CPPPATH=['src/'])
 
 # Library
-src_files = Glob('src/*.cpp')
-env.Object(src_files)
+lib_objects = env.Object('bin/main/rate_limiter', Glob('bin/main/*.cpp'))
+
+sources = Glob('bin/test/*.cpp')
+sources += Glob('bin/main/rate_limiter.o')
 
 # Testing
-test_files = Glob('test/*.cpp')
-env.Program('test.out', test_files)
+env.Program('bin/test/test.out', sources)
