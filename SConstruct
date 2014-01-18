@@ -12,4 +12,6 @@ sources = Glob('bin/test/*.cpp')
 sources += Glob('bin/main/rate_limiter.o')
 
 # Testing
-env.Program('bin/test/test.out', sources)
+testProgram = env.Program('bin/test/test.out', sources)
+testCommand = Command('test.out', None, 'bin/test/test.out')
+AlwaysBuild(testCommand)
