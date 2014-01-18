@@ -172,6 +172,7 @@ Test tests[] = {
 int main() {
     using namespace std;
 
+    int failed = 0;
     int num = sizeof(tests) / sizeof(Test);
     for (int i = 0; i < num; i++) {
         cout << "Running Test: " << tests[i].name << "...";
@@ -179,9 +180,13 @@ int main() {
 
         if (tests[i].test())
             cout << "Passed.";
-        else
+        else {
             cout << "Failed.";
+            failed++;
+        }
 
         cout << endl;
     }
+
+    return failed;
 }
