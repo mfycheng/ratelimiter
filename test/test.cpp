@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <future>
+#include <stdexcept>
 #include <string>
 #include <thread>
 #include "rate_limiter.hpp"
@@ -17,6 +18,19 @@ bool test_aquire() {
 
     RateLimiterInterface* limiter = new RateLimiter();
     limiter->set_rate(10);
+
+    // Make sure it checks inputs
+    bool exception_thrown = false;
+    try {
+        limiter->aquire(-1);
+    } catch (std::runtime_error ex) {
+        exception_thrown = true;
+    }
+
+    if (exception_thrown) {
+        return false;
+    }
+
     long long start = GET_TIME;
 
     for (int i = 0; i < 20; i++)
@@ -55,6 +69,18 @@ bool test_try_aquire() {
 
     RateLimiterInterface* limiter = new RateLimiter();
     limiter->set_rate(0.5);
+
+    // Make sure it checks inputs
+    bool exception_thrown = false;
+    try {
+        limiter->try_aquire(-1);
+    } catch (std::runtime_error ex) {
+        exception_thrown = true;
+    }
+
+    if (exception_thrown) {
+        return false;
+    }
 
     long long start = GET_TIME;
 

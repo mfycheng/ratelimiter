@@ -11,8 +11,9 @@ long RateLimiter::aquire() {
     return aquire(1);
 }
 long RateLimiter::aquire(int permits) {
-    if (permits <= 0)
+    if (permits <= 0) {
         std::runtime_error("RateLimiter: Must request positive amount of permits");
+    }
 
     auto wait_time = claim_next(permits);
     std::this_thread::sleep_for(wait_time);
@@ -34,8 +35,7 @@ bool RateLimiter::try_aquire(int permits, int timeout) {
     if (next_free_ > now + timeout * 1000)
         return false;
     else {
-        auto wait_time = claim_next(permits);
-        std::this_thread::sleep_for(wait_time);
+        aquire(permits);
     }
 
     return true;
@@ -80,8 +80,9 @@ double RateLimiter::get_rate() const {
     return 1000000.0 / interval_;
 }
 void RateLimiter::set_rate(double rate) {
-    if (rate <= 0.0)
+    if (rate <= 0.0) {
         throw std::runtime_error("RateLimiter: Rate must be greater than 0");
+  }
 
     std::lock_guard<std::mutex> lock(mut_);
     interval_ = 1000000.0 / rate;
